@@ -1,0 +1,47 @@
+version: "3"
+services:
+  hub:
+    image: selenium/hub:4.18.1-20240224
+    ports:
+    # - 4444:4444
+    # - 4442:4442
+    # - 4443:4443
+  chrome:
+    image: selenium/node-chrome:4.18.1-20240224
+    shm_size: '2g'
+    depends_on:
+    - hub
+    environment:
+    - SE_EVENT_BUS_HOST=hub
+    - SE_EVENT_BUS_PUBLISH_PORT=4442
+    - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    - SE_NODE_MAX_SESSIONS=4
+    - SE_VNC_NO_PASSWORD=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  vendor-portal:
+    image: amitdocker369/selfw
+    depends_on:
+      chrome:
+        condition: service_healthy
+    # we can mention multiple depends on
+    # - chrome
+    # - firefox
+    environment:
+    # instead of the ip '192.168.0.103' we can mention hub node 'hub' since they are in same netowrk
+    - HUB_HOST=hub
+    - BROWSER=chrome
+    - THREAD_COUNT=3
+    #- TEST_SUITE=vendor-portal.xml
+    command: ["sleep", "5s"]
+    volumes:
+      - ./output/test-output:/home/selenium-docker/test-output
+      - ./output/reports:/home/selenium-docker/reports
+      # we have been mapping directories , in below line we are mapping files, mike.json from local has incorrect data 
+      # and will replace the data file in docker
+      # file names in local and docker can be different
+      # - ./test-data/mike.json:/home/selenium-docker/test-data/vendor-portal/mike.json
