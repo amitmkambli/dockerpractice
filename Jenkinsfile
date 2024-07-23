@@ -33,6 +33,7 @@ pipeline{
             bat "docker-compose -f grid.yaml down"
             bat "docker-compose -f test-suites.yaml down"
             archiveArtifacts artifacts: 'output/test-output/emailable-report.html', followSymlinks: false
+            archiveArtifacts artifacts: 'output/reports/Extent_report.html', followSymlinks: false
         }
     }
 
