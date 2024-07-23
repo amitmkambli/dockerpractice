@@ -38,6 +38,8 @@ pipeline {
             echo "Archiving test reports"
             archiveArtifacts artifacts: 'output/test-output/emailable-report.html', followSymlinks: false
             archiveArtifacts artifacts: 'output/reports/Extent_Report.html', followSymlinks: false
+            echo "Publishing...."
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, escapeUnderscores: false, keepAll: false, reportDir: '', reportFiles: 'output/reports/Extent_Report.html', reportName: 'Extent Report', reportTitles: ''])
             echo "Exiting...."
         }
     }
