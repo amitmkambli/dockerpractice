@@ -27,6 +27,22 @@ pipeline {
                 }
             }
         }
+        
+        stage('Publish Extent Report') {
+            steps {
+                echo "Publishing Extent report...."
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, escapeUnderscores: false, keepAll: false, reportDir: '', reportFiles: 'output/reports/Extent_Report.html', reportName: 'Extent Report', reportTitles: ''])
+            }
+        }
+        
+        stage('Send Email') {
+            steps {
+                echo "Sending email..."
+                emailext body: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS <br>Check console output at $BUILD_URL to view the results.',
+                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                to: 'xyz210716@gmail.com'
+            }
+        }
 
     }
 
@@ -38,8 +54,6 @@ pipeline {
             echo "Archiving test reports"
             archiveArtifacts artifacts: 'output/test-output/emailable-report.html', followSymlinks: false
             archiveArtifacts artifacts: 'output/reports/Extent_Report.html', followSymlinks: false
-            echo "Publishing...."
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, escapeUnderscores: false, keepAll: false, reportDir: '', reportFiles: 'output/reports/Extent_Report.html', reportName: 'Extent Report', reportTitles: ''])
             echo "Exiting...."
         }
     }
