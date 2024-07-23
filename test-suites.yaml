@@ -6,10 +6,10 @@ services:
     image: amitdocker369/selfw
     environment:
     - HUB_HOST=hub
-    - BROWSER=chrome
+    - BROWSER=${BROWSER}
     - THREAD_COUNT=2
     #- TEST_SUITE=vendor-portal.xml
     volumes:
       - ./output/test-output:/home/selenium-docker/test-output
-      # - ./output/reports:/home/selenium-docker/reports
+      - ./output/reports:/home/selenium-docker/reports
 
