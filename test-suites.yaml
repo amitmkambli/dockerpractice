@@ -1,14 +1,11 @@
 version: "3"
 services:
-  hub:
-    image: selenium/hub:4.18.1-20240224
-  vendor-portal:
+  seleniumfw:
     image: amitdocker369/selfw
     environment:
     - HUB_HOST=hub
     - BROWSER=${BROWSER}
     - THREAD_COUNT=2
-    #- TEST_SUITE=vendor-portal.xml
     volumes:
-      - ./output/test-output:/home/selenium-docker/test-output
-      - ./output/reports:/home/selenium-docker/reports
+    - ./output/test-output:/home/selenium-docker/test-output
+    - ./output/reports:/home/selenium-docker/reports
